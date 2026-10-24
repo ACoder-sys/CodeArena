@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CodeArena</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#eef2f7;--card:#fff;--tx:#1d2733;--mut:#5d6b7a;--pri:#1e5a96;--bd:#cfd8e3;--ok:#1a8a3a;--bad:#c62828;--warn:#b26a00;--code:#f5f7fa}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10161d;--card:#1a222c;--tx:#e3e9f0;--mut:#93a1b1;--pri:#4a8fd6;--bd:#2c3846;--ok:#52c46f;--bad:#ef6b6b;--warn:#e8a43c;--code:#121920}}
+:root[data-theme="dark"]{--bg:#10161d;--card:#1a222c;--tx:#e3e9f0;--mut:#93a1b1;--pri:#4a8fd6;--bd:#2c3846;--ok:#52c46f;--bad:#ef6b6b;--warn:#e8a43c;--code:#121920}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Arial,sans-serif}
+header{background:#1e5a96;color:#fff;padding:10px 16px;display:flex;flex-wrap:wrap;align-items:center;gap:14px}
+.logo{font-size:22px;font-weight:700;letter-spacing:.5px}.logo b{color:#ffd54f}
+nav{display:flex;gap:4px;flex:1}
+nav a{color:#dbe8f6;text-decoration:none;padding:6px 12px;border-radius:4px;cursor:pointer}
+nav a.on,nav a:hover{background:rgba(255,255,255,.18);color:#fff}
+.user{font-size:14px}.user button{margin-left:6px}
+main{max-width:980px;margin:18px auto;padding:0 12px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:6px;padding:16px;margin-bottom:14px}
+h2{margin:0 0 10px;font-size:20px;color:var(--pri)}h3{margin:14px 0 6px;font-size:15px}
+table{width:100%;border-collapse:collapse}
+th{background:var(--pri);color:#fff;text-align:left;padding:8px;font-weight:600}
+td{padding:8px;border-bottom:1px solid var(--bd)}
+tr.row:hover td{background:var(--code);cursor:pointer}
+.wrap{overflow-x:auto}
+pre{background:var(--code);border:1px solid var(--bd);padding:8px 10px;border-radius:4px;margin:4px 0;overflow-x:auto;white-space:pre-wrap}
+textarea{width:100%;min-height:260px;font:13.5px/1.45 ui-monospace,Consolas,monospace;background:var(--code);color:var(--tx);border:1px solid var(--bd);border-radius:4px;padding:10px;tab-size:2}
+button{background:var(--pri);color:#fff;border:0;border-radius:4px;padding:8px 16px;font:inherit;cursor:pointer}
+button.sec{background:transparent;color:inherit;border:1px solid rgba(128,128,128,.5);padding:3px 10px}
+input{font:inherit;padding:7px;border:1px solid var(--bd);border-radius:4px;background:var(--card);color:var(--tx)}
+.ok{color:var(--ok);font-weight:600}.bad{color:var(--bad);font-weight:600}.warn{color:var(--warn);font-weight:600}
+.bar{height:8px;background:var(--bd);border-radius:4px;overflow:hidden;min-width:70px}.bar i{display:block;height:100%;background:var(--ok)}
+.meta{color:var(--mut);font-size:13px}
+.tests{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}
+.tests span{width:26px;height:26px;border-radius:4px;color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center}
+.tests .p{background:var(--ok)}.tests .f{background:var(--bad)}
+footer{text-align:center;color:var(--mut);font-size:13px;padding:20px}
+:root:root:root{--bg:#090d12;--card:#12181f;--tx:#e8edf2;--mut:#8896a5;--pri:#19d3b5;--bd:#222c36;--ok:#2ee59d;--bad:#ff6b6b;--warn:#f0a63a;--code:#0d1217}
+body{background:radial-gradient(500px 400px at 0 0,rgba(25,211,181,.22),transparent 70%),radial-gradient(500px 450px at 100% 15%,rgba(150,80,220,.16),transparent 70%),var(--bg);background-attachment:fixed}
+header{background:#0b0f14;border-bottom:1px solid var(--bd);padding:8px 20px;font-size:13px}
+.logo{font-size:15px;color:#fff}.logo b{color:#fff}.lg{color:var(--pri)}
+nav a{color:var(--mut);font-size:13px}nav a.on,nav a:hover{background:transparent;color:var(--pri)}
+th{background:#161e26;color:var(--mut);font-size:12px;text-transform:uppercase;letter-spacing:.5px}
+button{background:var(--pri);color:#04201b;font-weight:600;font-size:13px;padding:7px 18px}button.sec{background:transparent;color:var(--tx);font-weight:400}
+.card{border-radius:10px}footer{border-top:1px solid var(--bd)}
+.hero{display:flex;flex-wrap:wrap;gap:20px;justify-content:space-between;align-items:center;padding:26px 0 18px}
+.hl{display:flex;gap:14px;align-items:center}.hi{font-size:44px;background:#1b2630;border-radius:10px;padding:6px 12px}
+.hero h1{margin:2px 0 10px;font-size:26px}
+.cd{width:190px;background:#12181f;border:1px solid var(--bd);border-radius:6px;text-align:center;padding-bottom:10px}
+.cdh{background:#143a3a;color:var(--pri);font-size:11px;font-weight:700;padding:5px;letter-spacing:1px}
+.cdd{font-size:34px;font-weight:700;margin-top:6px}.cdt{display:flex;justify-content:center;gap:14px;margin-top:8px}.cdt b{font-size:18px}
+.note{background:#12332f;border:1px solid #1d5a52;color:#d3f6ef;border-radius:6px;padding:12px 16px;font-size:13px;margin:6px 0 24px}
+.sec-t{font-size:20px;margin:26px 0 4px}.sec-s{color:var(--mut);font-size:13px;margin-bottom:12px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+@media(max-width:700px){.g3,.g4{grid-template-columns:1fr}}
+.nc{background:var(--card);border:1px solid var(--bd);border-radius:8px;overflow:hidden}
+.nimg{height:110px;display:flex;align-items:center;justify-content:center;font-size:54px}
+.nb{padding:12px}.nb h4{margin:0 0 6px;font-size:14px}.nb p{margin:0;color:var(--mut);font-size:12px}
+.rc{background:var(--card);border:1px solid var(--bd);border-radius:8px;padding:12px}
+.rc .dt{color:var(--pri);font-size:12px;margin:8px 0 2px}.rc h4{margin:0 0 2px;font-size:14px}
+.st-p{color:#4a9eff;font-size:12px}.st-f{color:var(--warn);font-size:12px}.rc .bt{margin-top:12px;display:flex;gap:8px;align-items:center;font-size:12px}
+.mc{display:flex;gap:8px;align-items:center;background:var(--card);border:1px solid var(--bd);border-radius:8px;padding:10px;font-size:12px}
+.mc i{font-style:normal;font-size:22px}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo"><span class="lg">◆</span> Code<b>Arena</b></div>
+  <nav id="nav"><a data-v="home">Home</a><a data-v="problems">Problems</a><a data-v="contests">Contests</a><a data-v="subs">Submissions</a><a data-v="rating">Rating</a><a data-v="help">Help</a></nav>
+  <div class="user" id="user"></div>
+</header>
+<main id="app"></main>
+<footer>CodeArena &copy; 2026 &middot; Practice. Solve. Compete.</footer>
+<script>
+"use strict";
+const R=(f)=>f;
+const P=[
+{id:1,t:"A + B",lvl:"Easy",d:"Given two integers A and B, print their sum.",i:"One line with two integers A and B (|A|, |B| ≤ 10<sup>9</sup>).",o:"Print A + B.",
+ ref:s=>{const[a,b]=s.trim().split(/\s+/).map(Number);return String(a+b)},
+ ins:["2 3","-5 5","1000000000 1000000000","0 0","-7 -8","123456 654321"]},
+{id:2,t:"Even or Odd",lvl:"Easy",d:"Determine whether the given integer is even or odd.",i:"One integer N (|N| ≤ 10<sup>9</sup>).",o:"Print “Even” or “Odd”.",
+ ref:s=>Number(s)%2===0?"Even":"Odd",ins:["4","7","0","-3","-10","999999999"]},
+{id:3,t:"Sum from 1 to N",lvl:"Easy",d:"Find the sum of all integers from 1 to N.",i:"One integer N (1 ≤ N ≤ 10<sup>6</sup>).",o:"Print the sum.",
+ ref:s=>{const n=Number(s);return String(n*(n+1)/2)},ins:["5","1","100","1000000","12345","77"]},
+{id:4,t:"Maximum",lvl:"Easy",d:"Find the largest number among N given integers.",i:"First line: N (1 ≤ N ≤ 1000). Second line: N integers.",o:"Print the maximum.",
+ ref:s=>String(Math.max(...s.split("\n")[1].trim().split(/\s+/).map(Number))),
+ ins:["3\n1 5 2","1\n-9","5\n-1 -2 -3 -4 -5","4\n7 7 7 7","6\n10 20 30 5 99 100","2\n0 -1"]},
+{id:5,t:"Factorial",lvl:"Medium",d:"Compute N! (the product of all integers from 1 to N).",i:"One integer N (0 ≤ N ≤ 15).",o:"Print N!.",
+ ref:s=>{let r=1;for(let k=2;k<=Number(s);k++)r*=k;return String(r)},ins:["5","0","1","10","15","7"]},
+{id:6,t:"Palindrome",lvl:"Medium",d:"A word is a palindrome if it reads the same in both directions. Check the given word.",i:"One lowercase word, up to 100 letters.",o:"Print “YES” if it is a palindrome, otherwise “NO”.",
+ ref:s=>{s=s.trim();return s===[...s].reverse().join("")?"YES":"NO"},ins:["level","hello","a","abba","abcd","racecar","ab"]}
+];
+const S={get(k,d){try{const v=localStorage.getItem("ca_"+k);return v?JSON.parse(v):d}catch(e){return d}},
+ set(k,v){try{localStorage.setItem("ca_"+k,JSON.stringify(v))}catch(e){}}};
+let me=S.get("user",null),subs=S.get("subs",[]),drafts={};
+const $=s=>document.querySelector(s),app=$("#app");
+const esc=s=>String(s).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+const TEMPLATE="// Read input with readline(), output with print()\nconst [a, b] = readline().split(' ').map(Number);\nprint(a + b);\n";
+
+function best(pid){let b=-1;subs.filter(s=>s.user===me&&s.pid===pid).forEach(s=>b=Math.max(b,s.score));return b}
+function userBar(){ $("#user").innerHTML=me?`👤 ${esc(me)} <button class="sec" id="out">Log out</button>`:"";
+  const o=$("#out");if(o)o.onclick=()=>{me=null;S.set("user",null);go("problems")}}
+function go(v,arg){
+  if(!me){login();return}
+  userBar();
+  document.querySelectorAll("nav a").forEach(a=>a.classList.toggle("on",a.dataset.v===v||(v==="problem"&&a.dataset.v==="problems")));
+  clearInterval(window.tm);({home,contests,problems,problem:()=>problem(arg),subs:subsView,rating,help})[v]();
+  try{history.replaceState(null,"","#"+(v==="problem"?"p"+arg:v))}catch(e){}
+}
+function login(){
+  $("#user").innerHTML="";
+  app.innerHTML=`<div class="card" style="max-width:420px;margin:40px auto"><h2>Welcome to CodeArena</h2>
+  <p class="meta">Pick a username to start solving problems.</p>
+  <p><input id="un" maxlength="20" placeholder="Username" style="width:100%"></p><button id="go">Enter</button></div>`;
+  const f=()=>{const v=$("#un").value.trim();if(v){me=v;S.set("user",v);go("problems")}};
+  $("#go").onclick=f;$("#un").onkeydown=e=>{if(e.key==="Enter")f()};
+}
+const pad=n=>String(n).padStart(2,"0");
+function nextSun(){const d=new Date();d.setHours(16,0,0,0);d.setDate(d.getDate()+(7-d.getDay())%7);if(d<new Date())d.setDate(d.getDate()+7);return d}
+function fmt(d){return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`}
+function rounds(){const n=nextSun(),at=(o,h)=>{const d=new Date(n);d.setDate(d.getDate()+o);d.setHours(h,0,0,0);return d};
+ return[{n:"Weekend Practice #2",d:at(0,16),f:0,i:"🏆"},{n:"Blitz Round #3",d:at(5,14),f:0,i:"⚡"},{n:"Blitz Round #2",d:at(-6,14),f:1,i:"⚡"},{n:"Weekend Practice #1",d:at(-7,16),f:1,i:"🏆"},{n:"Blitz Round #1",d:at(-13,14),f:1,i:"⚡"},{n:"Opening Round",d:at(-20,15),f:1,i:"🚀"}]}
+function roundCards(l){return `<div class="g3">${l.map(r=>`<div class="rc"><div style="font-size:26px">${r.i}</div><div class="dt">📅 ${fmt(r.d)}</div><h4>${r.n}</h4><div class="${r.f?"st-f":"st-p"}">${r.f?"Finished":"Scheduled"}</div><div class="bt"><button data-go="${r.f?"rating":"problems"}">${r.f?"Results":"Open"}</button><span class="meta">More</span></div></div>`).join("")}</div>`}
+function bindGo(){app.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>go(b.dataset.go))}
+function home(){
+ const n=nextSun(),R=rounds();
+ app.innerHTML=`<section class="hero"><div class="hl"><div class="hi">🏆</div><div><div class="meta">Upcoming contest</div><h1>Weekend Practice #2</h1><button data-go="problems">Open</button> <button class="sec" data-go="contests">More</button></div></div>
+ <div class="cd"><div class="cdh">${n.toLocaleString("en",{month:"short"}).toUpperCase()}</div><div class="cdd">${n.getDate()}</div><div class="meta">${n.toLocaleString("en",{weekday:"short"})} · ${pad(n.getHours())}:00</div><div class="cdt"><b id="ch">00</b><b id="cm">00</b><b id="cs">00</b></div></div></section>
+ <div class="note">Want to host your own contest? Create a room for your school or friends and run private contests.</div>
+ <h2 class="sec-t">News and announcements</h2><div class="sec-s">Round announcements, platform updates and everything the community is talking about.</div>
+ <div class="g3">${[["Blitz Round #3","A new Blitz Round is announced. Four problems, two hours, one winner.","linear-gradient(135deg,#1a3d2e,#c9a227)","🦊"],["Weekend Practice #2","Join this Sunday’s practice round and climb the rating.","linear-gradient(135deg,#143a3a,#7a4de0)","⚡"],["New problem set","Six starter problems are live. Solve them and see your percentage grow.","linear-gradient(135deg,#1c2f5a,#2a7a8a)","💻"]].map(x=>`<div class="nc"><div class="nimg" style="background:${x[2]}">${x[3]}</div><div class="nb"><h4>${x[0]}</h4><p>${x[1]}</p></div></div>`).join("")}</div>
+ <h2 class="sec-t">CodeArena rounds</h2><div class="sec-s">Join our original rounds such as Weekend Practice and Blitz Rounds.</div>${roundCards(R)}
+ <h2 class="sec-t">Newly added contests</h2><div class="sec-s">Recently added contests on the platform.</div>
+ <div class="g4">${R.slice(0,4).map(r=>`<div class="mc"><i>${r.i}</i><div><b>${r.n}</b><div class="meta">${fmt(r.d)}</div></div></div>`).join("")}</div>`;
+ bindGo();
+ const tick=()=>{let s=Math.max(0,Math.floor((n-new Date())/1000));$("#ch").textContent=pad(Math.floor(s/3600));$("#cm").textContent=pad(Math.floor(s%3600/60));$("#cs").textContent=pad(s%60)};
+ tick();window.tm=setInterval(tick,1000);
+}
+function contests(){app.innerHTML=`<h2 class="sec-t" style="margin-top:6px">Contests</h2><div class="sec-s">All CodeArena rounds.</div>${roundCards(rounds())}`;bindGo()}
+const LANGS={js:"JavaScript",py:"Python 3",cpp:"C++",c:"C"};
+const TPL={js:TEMPLATE,py:`a, b = map(int, input().split())
+print(a + b)
+`,cpp:`#include <iostream>
+using namespace std;
+
+int main() {
+  int a, b;
+  cin >> a >> b;
+  cout << a + b << endl;
+  return 0;
+}
+`,c:`#include <stdio.h>
+
+int main() {
+  int a, b;
+  scanf("%d %d", &a, &b);
+  printf("%d", a + b);
+  return 0;
+}
+`};
+let curLang=S.get("lang","js");
+const PYSRC=`importScripts("https://cdn.jsdelivr.net/npm/pyodide@0.26.4/full/pyodide.js");
+const NL=String.fromCharCode(10);let py;
+const init=loadPyodide().then(p=>{py=p;postMessage({ready:1})});
+onmessage=async e=>{await init;const L=e.data.input.split(NL);let i=0;const o=[];
+py.setStdin({stdin:()=>i<L.length?L[i++]:null});py.setStdout({batched:s=>o.push(s)});py.setStderr({batched:()=>{}});
+const g=py.globals.get("dict")();
+try{py.runPython(e.data.code,{globals:g});postMessage({out:o.join(NL)})}catch(x){postMessage({err:String(x.message).trim().split(NL).pop()})}g.destroy()}`;
+const CPPSRC=`importScripts("https://cdn.jsdelivr.net/npm/JSCPP@2.0.9/dist/JSCPP.es5.min.js");
+postMessage({ready:1});
+onmessage=e=>{const o=[];try{JSCPP.run(e.data.code,e.data.input,{stdio:{write:s=>o.push(s)},maxTimeout:2500});postMessage({out:o.join("")})}catch(x){postMessage({err:String(x&&x.message||x)})}}`;
+const cfix=c=>c.replace(/#include\s*<(\w+)\.h>/g,(m,n)=>"#include <c"+n+">");
+const WK={};
+function getW(kind,src){
+ if(WK[kind])return WK[kind];
+ let w;try{w=new Worker(URL.createObjectURL(new Blob([src],{type:"text/javascript"})))}catch(e){return null}
+ const o={w,ready:false};
+ o.rp=new Promise(res=>{w.onmessage=m=>{if(m.data.ready){o.ready=true;res(true)}};w.onerror=()=>res(false)});
+ WK[kind]=o;return o;
+}
+async function runWorker(kind,src,code,input){
+ const o=getW(kind,src);
+ if(!o)return{err:"Web workers are not available here"};
+ if(!o.ready){const ok=await Promise.race([o.rp,new Promise(r=>setTimeout(()=>r(false),60000))]);
+  if(!ok){o.w.terminate();delete WK[kind];return{err:"Could not load the runtime. Check your internet connection."}}}
+ return new Promise(res=>{
+  const t=setTimeout(()=>{o.w.terminate();delete WK[kind];res({tle:1})},3000);
+  o.w.onmessage=m=>{if(m.data.ready)return;clearTimeout(t);const d=m.data;res(d.err&&/timeout/i.test(d.err)?{tle:1}:d)};
+  o.w.onerror=()=>{clearTimeout(t);res({err:"Runtime error"})};
+  o.w.postMessage({code,input});
+ });
+}
+function runAny(lang,code,input){
+ if(lang==="py")return runWorker("py",PYSRC,code,input);
+ if(lang==="cpp")return runWorker("cpp",CPPSRC,code,input);
+ if(lang==="c")return runWorker("cpp",CPPSRC,cfix(code),input);
+ return runOne(code,input);
+}
+function problems(){
+  app.innerHTML=`<div class="card"><h2>Problems</h2><div class="wrap"><table><tr><th>#</th><th>Title</th><th>Level</th><th>Solved %</th></tr>${
+  P.map(p=>{const b=best(p.id);return `<tr class="row" data-id="${p.id}"><td>${p.id}</td><td>${p.t}</td><td>${p.lvl}</td>
+  <td>${b<0?'<span class="meta">—</span>':`<div class="bar"><i style="width:${b}%"></i></div><span class="meta">${b}%</span>`}</td></tr>`}).join("")}</table></div></div>`;
+  app.querySelectorAll(".row").forEach(r=>r.onclick=()=>go("problem",+r.dataset.id));
+}
+function problem(id){
+  const p=P.find(x=>x.id===id);
+  app.innerHTML=`<div class="card"><h2>${p.id}. ${p.t}</h2><div class="meta">Time limit 2 s · ${p.ins.length} tests</div>
+  <h3>Problem</h3><div>${p.d}</div><h3>Input</h3><div>${p.i}</div><h3>Output</h3><div>${p.o}</div>
+  <h3>Example</h3><div class="meta">Input</div><pre>${esc(p.ins[0])}</pre><div class="meta">Output</div><pre>${esc(p.ref(p.ins[0]))}</pre></div>
+  <div class="card"><h2>Submit solution</h2><p><select id="lang" style="font:inherit;padding:6px;background:var(--card);color:var(--tx);border:1px solid var(--bd);border-radius:4px">${Object.entries(LANGS).map(([k,v])=>`<option value="${k}">${v}</option>`).join("")}</select></p><textarea id="code" spellcheck="false"></textarea>
+  <p><button id="sub">Submit</button> <button class="sec" id="back">← Problems</button></p><div id="res"></div></div>`;
+  const ta=$("#code"),ls=$("#lang");ls.value=curLang;
+  const load=()=>{ta.value=drafts[id+ls.value]??TPL[ls.value]};load();
+  ls.onchange=()=>{curLang=ls.value;S.set("lang",curLang);load()};
+  ta.oninput=()=>drafts[id+ls.value]=ta.value;
+  ta.onkeydown=e=>{if(e.key==="Tab"){e.preventDefault();const s=ta.selectionStart;ta.setRangeText("  ",s,ta.selectionEnd,"end")}};
+  $("#back").onclick=()=>go("problems");
+  $("#sub").onclick=async()=>{
+    $("#sub").disabled=true;$("#res").innerHTML='<p class="meta">Judging… '+(ls.value==="js"?"":"(the first run loads the runtime, this can take a few seconds)")+'</p>';
+    const r=await judge(p,ta.value,ls.value);
+    subs.unshift({n:Date.now(),user:me,pid:id,verdict:r.verdict,score:r.score,res:r.res,lang:ls.value});subs=subs.slice(0,200);S.set("subs",subs);
+    $("#res").innerHTML=verdictHtml(r)+(r.msg?`<pre>${esc(r.msg)}</pre>`:"")+`<div class="tests">${r.res.map((x,i)=>`<span class="${x==="OK"?"p":"f"}" title="${x}">${i+1}</span>`).join("")}</div>`;
+    $("#sub").disabled=false;
+  };
+}
+function verdictHtml(r){const c=r.verdict==="Accepted"?"ok":r.verdict==="Wrong Answer"?"bad":"warn";
+  return `<p><span class="${c}">${r.verdict}</span> — passed ${r.res.filter(x=>x==="OK").length} of ${r.res.length} tests (${r.score}%)</p>`}
+const WSRC=`onmessage=e=>{const L=e.data.input.split("\\n");let i=0;const o=[];
+const readline=()=>i<L.length?L[i++]:"",print=(...a)=>o.push(a.join(" "));
+try{new Function("readline","print",e.data.code)(readline,print);postMessage({out:o.join("\\n")})}catch(x){postMessage({err:String(x)})}}`;
+function runOne(code,input){
+  return new Promise(res=>{
+    let w;
+    const direct=()=>{const L=input.split("\n");let i=0;const o=[];
+      try{new Function("readline","print",code)(()=>i<L.length?L[i++]:"",(...a)=>o.push(a.join(" ")));res({out:o.join("\n")})}catch(x){res({err:String(x)})}};
+    try{w=new Worker(URL.createObjectURL(new Blob([WSRC],{type:"text/javascript"})))}catch(e){return direct()}
+    const t=setTimeout(()=>{w.terminate();res({tle:1})},2000);
+    w.onmessage=e=>{clearTimeout(t);w.terminate();res(e.data)};
+    w.onerror=()=>{clearTimeout(t);w.terminate();direct()};
+    w.postMessage({code,input});
+  });
+}
+async function judge(p,code,lang){
+  const res=[];let verdict="Accepted",msg="";
+  for(const inp of p.ins){
+    const r=await runAny(lang,code,inp);if(r.err&&!msg)msg=r.err;let v="OK";
+    if(r.tle)v="TLE";else if(r.err)v="RE";else if(r.out.trim().replace(/\s+\n/g,"\n")!==p.ref(inp))v="WA";
+    res.push(v);
+  }
+  const ok=res.filter(x=>x==="OK").length,score=Math.round(ok/res.length*100);
+  if(ok<res.length){const f=res.find(x=>x!=="OK");verdict=f==="TLE"?"Time Limit Exceeded":f==="RE"?"Runtime Error":"Wrong Answer"}
+  return{verdict,score,res,msg};
+}
+function subsView(){
+  const mine=subs.filter(s=>s.user===me);
+  app.innerHTML=`<div class="card"><h2>My submissions</h2><div class="wrap"><table><tr><th>Time</th><th>Problem</th><th>Verdict</th><th>Score</th></tr>${
+  mine.map(s=>`<tr><td>${new Date(s.n).toLocaleString()}</td><td>${s.pid}. ${P.find(p=>p.id===s.pid).t} <span class="meta">${LANGS[s.lang||"js"]}</span></td>
+  <td class="${s.verdict==="Accepted"?"ok":s.verdict==="Wrong Answer"?"bad":"warn"}">${s.verdict}</td><td>${s.score}%</td></tr>`).join("")||'<tr><td colspan="4" class="meta">No submissions yet.</td></tr>'}</table></div></div>`;
+}
+function rating(){
+  const us={};subs.forEach(s=>{us[s.user]=us[s.user]||{};us[s.user][s.pid]=Math.max(us[s.user][s.pid]||0,s.score)});
+  const rows=Object.entries(us).map(([u,m])=>({u,solved:Object.values(m).filter(x=>x===100).length,pts:Object.values(m).reduce((a,b)=>a+b,0)}))
+   .sort((a,b)=>b.solved-a.solved||b.pts-a.pts);
+  app.innerHTML=`<div class="card"><h2>Rating</h2><div class="wrap"><table><tr><th>#</th><th>User</th><th>Solved</th><th>Points</th></tr>${
+  rows.map((r,i)=>`<tr><td>${i+1}</td><td>${esc(r.u)}</td><td>${r.solved}/${P.length}</td><td>${r.pts}</td></tr>`).join("")||'<tr><td colspan="4" class="meta">Nobody yet.</td></tr>'}</table></div>
+  <p class="meta">Ranks users on this device. A shared server-side rating is the next step.</p></div>`;
+}
+function help(){
+  app.innerHTML=`<div class="card"><h2>Help</h2><p>Choose <b>JavaScript, Python 3, C++ or C</b> above the editor. Read from standard input and write to standard output. In JavaScript use <code>readline()</code> and <code>print(...)</code>; in the other languages use the usual <code>input()</code>/<code>print()</code>, <code>cin</code>/<code>cout</code> or <code>scanf</code>/<code>printf</code>.</p><p class="meta">Python, C and C++ run inside your browser (Pyodide and JSCPP), so C and C++ support a common subset of the language.</p>
+  <pre>const n = Number(readline());\nprint(n * 2);</pre>
+  <p>Each problem has several tests. Your score is the percentage of tests passed, like on classic e-olymp. Each test has a 2 second limit.</p>
+  <h3>Verdicts</h3><p><span class="ok">Accepted</span> — all tests passed · <span class="bad">Wrong Answer</span> · <span class="warn">Runtime Error</span> · <span class="warn">Time Limit Exceeded</span></p></div>`;
+}
+document.querySelectorAll("nav a").forEach(a=>a.onclick=()=>go(a.dataset.v));
+const h=location.hash.match(/^#p(\d+)$/);
+go(h&&P.find(p=>p.id==h[1])?"problem":(location.hash.slice(1)||"home"),h?+h[1]:undefined);
+</script>
+</body>
+</html>
