@@ -64,6 +64,34 @@ button{background:var(--pri);color:#04201b;font-weight:600;font-size:13px;paddin
 .st-p{color:#4a9eff;font-size:12px}.st-f{color:var(--warn);font-size:12px}.rc .bt{margin-top:12px;display:flex;gap:8px;align-items:center;font-size:12px}
 .mc{display:flex;gap:8px;align-items:center;background:var(--card);border:1px solid var(--bd);border-radius:8px;padding:10px;font-size:12px}
 .mc i{font-style:normal;font-size:22px}
+
+main.wide{max-width:none;margin:0;padding:10px}
+.sel{font:inherit;padding:7px;background:var(--card);color:var(--tx);border:1px solid var(--bd);border-radius:6px}
+.lst{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:6px 24px}
+.pi{display:flex;gap:14px;align-items:center;padding:14px 0;border-bottom:1px solid var(--bd);cursor:pointer}.pi:last-child{border:0}
+.ck{width:18px;height:18px;border-radius:50%;border:2px solid #4a5560;flex:none;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--ok)}
+.ck.ok{border-color:var(--ok)}.ck.part{border-color:var(--warn)}
+.pt{font-weight:600;font-size:16px}.pt i{font-style:normal;color:var(--mut);margin-left:6px}.ps{font-size:12px;color:var(--mut)}
+.d-Easy{color:var(--ok)}.d-Medium{color:#f59e0b}
+.tb{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap}.tb input{flex:1;min-width:180px}
+.ws{display:grid;grid-template-columns:1fr 1fr;gap:10px;height:calc(100vh - 110px)}
+@media(max-width:900px){.ws{grid-template-columns:1fr;height:auto}.edp{min-height:340px}.btp{min-height:260px}}
+.pn{background:var(--card);border:1px solid var(--bd);border-radius:10px;display:flex;flex-direction:column;min-height:0;overflow:hidden}
+.tabs{display:flex;gap:4px;padding:8px;border-bottom:1px solid var(--bd)}
+.tabs a{padding:6px 12px;border-radius:6px;cursor:pointer;font-size:13px;color:var(--mut)}.tabs a.on{background:#222c36;color:var(--tx)}
+.pb{padding:20px 28px;overflow:auto;flex:1}.pb h1{font-size:28px;margin:4px 0 8px}.pb h3{font-size:19px;margin:22px 0 8px}
+.mt{display:flex;gap:18px;color:var(--mut);font-size:13px;flex-wrap:wrap;margin-bottom:14px}
+.ex{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.exb{background:var(--code);border-radius:8px;overflow:hidden}
+.exb b{display:flex;justify-content:space-between;align-items:center;padding:8px 14px;font-size:13px;border-bottom:1px solid var(--bd)}
+.exb pre{margin:0;border:0;padding:12px 14px}
+.rt{display:flex;flex-direction:column;gap:10px;min-height:0}.edp{flex:3}.btp{flex:2}
+.tool{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;gap:8px}
+.ed{display:flex;flex:1;min-height:180px;overflow:hidden}
+.ln{margin:0;border:0;border-radius:0;padding:12px 8px 12px 12px;color:#4d5a66;text-align:right;font:13.5px/1.45 ui-monospace,Consolas,monospace;overflow:hidden;user-select:none;background:var(--code)}
+.ed textarea{flex:1;border:0;border-radius:0;min-height:0;white-space:pre;overflow:auto;resize:none}
+.badge{background:#12332f;color:var(--ok);font-size:12px;padding:2px 8px;border-radius:10px}
+.ph{display:flex;align-items:center;gap:10px;padding:2px 6px 10px;font-weight:600}
 </style>
 </head>
 <body>
@@ -107,7 +135,7 @@ function go(v,arg){
   if(!me){login();return}
   userBar();
   document.querySelectorAll("nav a").forEach(a=>a.classList.toggle("on",a.dataset.v===v||(v==="problem"&&a.dataset.v==="problems")));
-  clearInterval(window.tm);({home,contests,problems,problem:()=>problem(arg),subs:subsView,rating,help})[v]();
+  clearInterval(window.tm);app.classList.remove("wide");({home,contests,problems,problem:()=>problem(arg),subs:subsView,rating,help})[v]();
   try{history.replaceState(null,"","#"+(v==="problem"?"p"+arg:v))}catch(e){}
 }
 function login(){
@@ -173,6 +201,7 @@ const CPPSRC=`importScripts("https://cdn.jsdelivr.net/npm/JSCPP@2.0.9/dist/JSCPP
 postMessage({ready:1});
 onmessage=e=>{const o=[];try{JSCPP.run(e.data.code,e.data.input,{stdio:{write:s=>o.push(s)},maxTimeout:2500});postMessage({out:o.join("")})}catch(x){postMessage({err:String(x&&x.message||x)})}}`;
 const cfix=c=>c.replace(/#include\s*<(\w+)\.h>/g,(m,n)=>"#include <c"+n+">");
+const cppfix=c=>c.replace(/#include\s*<bits\/stdc\+\+\.h>/g,"#include <iostream>\n#include <string>\n#include <vector>\n#include <cmath>\n#include <algorithm>").replace(/(ios_base|ios)::sync_with_stdio\([^)]*\);|(cin|cout)\.tie\([^)]*\);/g,"");
 const WK={};
 function getW(kind,src){
  if(WK[kind])return WK[kind];
@@ -195,36 +224,52 @@ async function runWorker(kind,src,code,input){
 }
 function runAny(lang,code,input){
  if(lang==="py")return runWorker("py",PYSRC,code,input);
- if(lang==="cpp")return runWorker("cpp",CPPSRC,code,input);
- if(lang==="c")return runWorker("cpp",CPPSRC,cfix(code),input);
+ if(lang==="cpp")return runWorker("cpp",CPPSRC,cppfix(code),input);
+ if(lang==="c")return runWorker("cpp",CPPSRC,cppfix(cfix(code)),input);
  return runOne(code,input);
 }
+const TAGS={1:["Math","For Beginners"],2:["Math","For Beginners"],3:["Math"],4:["Arrays","For Beginners"],5:["Math","Brute force"],6:["Strings"]};
 function problems(){
-  app.innerHTML=`<div class="card"><h2>Problems</h2><div class="wrap"><table><tr><th>#</th><th>Title</th><th>Level</th><th>Solved %</th></tr>${
-  P.map(p=>{const b=best(p.id);return `<tr class="row" data-id="${p.id}"><td>${p.id}</td><td>${p.t}</td><td>${p.lvl}</td>
-  <td>${b<0?'<span class="meta">—</span>':`<div class="bar"><i style="width:${b}%"></i></div><span class="meta">${b}%</span>`}</td></tr>`}).join("")}</table></div></div>`;
-  app.querySelectorAll(".row").forEach(r=>r.onclick=()=>go("problem",+r.dataset.id));
+ app.innerHTML=`<h2 class="sec-t" style="margin:6px 0 14px">Problems</h2><div class="tb"><input id="q" placeholder="Search"><select id="df" class="sel"><option value="">All levels</option><option>Easy</option><option>Medium</option></select></div><div class="lst" id="lst"></div>`;
+ const draw=()=>{const q=$("#q").value.toLowerCase(),f=$("#df").value;
+  $("#lst").innerHTML=P.filter(p=>(!f||p.lvl===f)&&(!q||(p.t+" "+TAGS[p.id].join(" ")+" #"+p.id).toLowerCase().includes(q))).map(p=>{const b=best(p.id);
+   return `<div class="pi" data-id="${p.id}"><span class="ck ${b===100?"ok":b>0?"part":""}">${b===100?"✓":""}</span><div><div class="pt">${p.t}<i>#${p.id}</i></div><div class="ps"><span class="d-${p.lvl}">${p.lvl}</span> · ${TAGS[p.id].join(" · ")}</div></div></div>`}).join("")||'<p class="meta" style="padding:16px 0">No problems found.</p>';
+  app.querySelectorAll(".pi").forEach(r=>r.onclick=()=>go("problem",+r.dataset.id))};
+ $("#q").oninput=draw;$("#df").onchange=draw;draw();
 }
 function problem(id){
-  const p=P.find(x=>x.id===id);
-  app.innerHTML=`<div class="card"><h2>${p.id}. ${p.t}</h2><div class="meta">Time limit 2 s · ${p.ins.length} tests</div>
-  <h3>Problem</h3><div>${p.d}</div><h3>Input</h3><div>${p.i}</div><h3>Output</h3><div>${p.o}</div>
-  <h3>Example</h3><div class="meta">Input</div><pre>${esc(p.ins[0])}</pre><div class="meta">Output</div><pre>${esc(p.ref(p.ins[0]))}</pre></div>
-  <div class="card"><h2>Submit solution</h2><p><select id="lang" style="font:inherit;padding:6px;background:var(--card);color:var(--tx);border:1px solid var(--bd);border-radius:4px">${Object.entries(LANGS).map(([k,v])=>`<option value="${k}">${v}</option>`).join("")}</select></p><textarea id="code" spellcheck="false"></textarea>
-  <p><button id="sub">Submit</button> <button class="sec" id="back">← Problems</button></p><div id="res"></div></div>`;
-  const ta=$("#code"),ls=$("#lang");ls.value=curLang;
-  const load=()=>{ta.value=drafts[id+ls.value]??TPL[ls.value]};load();
-  ls.onchange=()=>{curLang=ls.value;S.set("lang",curLang);load()};
-  ta.oninput=()=>drafts[id+ls.value]=ta.value;
-  ta.onkeydown=e=>{if(e.key==="Tab"){e.preventDefault();const s=ta.selectionStart;ta.setRangeText("  ",s,ta.selectionEnd,"end")}};
-  $("#back").onclick=()=>go("problems");
-  $("#sub").onclick=async()=>{
-    $("#sub").disabled=true;$("#res").innerHTML='<p class="meta">Judging… '+(ls.value==="js"?"":"(the first run loads the runtime, this can take a few seconds)")+'</p>';
-    const r=await judge(p,ta.value,ls.value);
-    subs.unshift({n:Date.now(),user:me,pid:id,verdict:r.verdict,score:r.score,res:r.res,lang:ls.value});subs=subs.slice(0,200);S.set("subs",subs);
-    $("#res").innerHTML=verdictHtml(r)+(r.msg?`<pre>${esc(r.msg)}</pre>`:"")+`<div class="tests">${r.res.map((x,i)=>`<span class="${x==="OK"?"p":"f"}" title="${x}">${i+1}</span>`).join("")}</div>`;
-    $("#sub").disabled=false;
-  };
+ const p=P.find(x=>x.id===id);app.classList.add("wide");
+ const b0=best(id),all=subs.filter(s=>s.pid===id),acc=all.length?Math.round(all.filter(s=>s.score===100).length/all.length*100):0;
+ const ex=(t,v)=>`<div class="exb"><b>${t}<button class="sec cp">Copy</button></b><pre>${esc(v)}</pre></div>`;
+ app.innerHTML=`<div class="ph"><a id="bk" style="cursor:pointer;font-size:20px">←</a> ${p.t} <span class="meta">#${p.id}</span><span class="badge" id="bd">${Math.max(b0,0)} / 100</span></div>
+ <div class="ws"><div class="pn"><div class="tabs"><a class="on" data-t="s">Statement</a><a data-t="a">Attempts</a></div><div class="pb" id="lp"></div></div>
+ <div class="rt"><div class="pn edp"><div class="tool"><select id="lang" class="sel">${Object.entries(LANGS).map(([k,v])=>`<option value="${k}">${v}</option>`).join("")}</select><span><button class="sec" id="run">▶ Run</button> <button id="sub">Submit</button></span></div>
+ <div class="ed"><pre class="ln" id="ln"></pre><textarea id="code" spellcheck="false" wrap="off"></textarea></div></div>
+ <div class="pn btp"><div class="tabs"><a class="on" data-b="i">Input</a><a data-b="r">Run</a><a data-b="t">Tests</a></div><div class="pb" id="bp"></div></div></div></div>`;
+ const stm=()=>{$("#lp").innerHTML=`<h1>${p.t}</h1><div class="mt"><span>⏱ 2 seconds</span><span>💾 128 MB</span><span class="d-${p.lvl}">${p.lvl}</span><span>🏷 ${TAGS[id].join(", ")}</span></div><p>${p.d}</p><h3>Input</h3><p>${p.i}</p><h3>Output</h3><p>${p.o}</p><h3>Examples</h3><div class="meta" style="margin-bottom:6px">Example 1</div><div class="ex">${ex("Input",p.ins[0])}${ex("Output",p.ref(p.ins[0]))}</div><p class="meta" style="margin-top:28px">${all.length} submissions · Acceptance rate ${acc}%</p>`;
+  $("#lp").querySelectorAll(".cp").forEach((c,i)=>c.onclick=()=>{try{navigator.clipboard.writeText(i?p.ref(p.ins[0]):p.ins[0])}catch(e){}c.textContent="Copied"})};
+ const att=()=>{const m=subs.filter(s=>s.user===me&&s.pid===id);$("#lp").innerHTML="<h3>Attempts</h3>"+(m.map(s=>`<p><span class="${s.verdict==="Accepted"?"ok":"bad"}">${s.verdict}</span> · ${s.score}% · ${LANGS[s.lang||"js"]} <span class="meta">${new Date(s.n).toLocaleString()}</span></p>`).join("")||'<p class="meta">No attempts yet.</p>')};
+ document.querySelectorAll("[data-t]").forEach(a=>a.onclick=()=>{document.querySelectorAll("[data-t]").forEach(x=>x.classList.toggle("on",x===a));a.dataset.t==="s"?stm():att()});
+ let inp=p.ins[0],outH="",tstH="";
+ const bt=k=>{document.querySelectorAll("[data-b]").forEach(x=>x.classList.toggle("on",x.dataset.b===k));const bp=$("#bp");
+  if(k==="i"){bp.innerHTML=`<div class="meta">Add your own test input below</div><textarea id="ci" spellcheck="false" style="min-height:90px;margin-top:8px"></textarea>`;$("#ci").value=inp;$("#ci").oninput=e=>inp=e.target.value}
+  else bp.innerHTML=k==="r"?(outH||'<p class="meta">Press Run to execute your code on the input.</p>'):(tstH||'<p class="meta">Press Submit to test your solution.</p>')};
+ document.querySelectorAll("[data-b]").forEach(a=>a.onclick=()=>bt(a.dataset.b));
+ const ta=$("#code"),ls=$("#lang"),ln=$("#ln");ls.value=curLang;
+ const nums=()=>{ln.textContent=ta.value.split("\n").map((_,i)=>i+1).join("\n")};
+ const load=()=>{ta.value=drafts[id+ls.value]??TPL[ls.value];nums()};load();
+ ls.onchange=()=>{curLang=ls.value;S.set("lang",curLang);load()};
+ ta.oninput=()=>{drafts[id+ls.value]=ta.value;nums()};ta.onscroll=()=>{ln.scrollTop=ta.scrollTop};
+ ta.onkeydown=e=>{if(e.key==="Tab"){e.preventDefault();ta.setRangeText("  ",ta.selectionStart,ta.selectionEnd,"end");ta.oninput()}};
+ $("#bk").onclick=()=>go("problems");
+ $("#run").onclick=async()=>{bt("r");$("#bp").innerHTML='<p class="meta">Running…</p>';const r=await runAny(ls.value,ta.value,inp);
+  outH=r.tle?'<span class="warn">Time Limit Exceeded</span>':r.err?`<span class="warn">Runtime Error</span><pre>${esc(r.err)}</pre>`:`<div class="meta">Output</div><pre>${esc(r.out)}</pre>`;bt("r")};
+ $("#sub").onclick=async()=>{const sb=$("#sub");sb.disabled=true;bt("t");$("#bp").innerHTML='<p class="meta">Judging…'+(ls.value==="js"?"":" (the first run loads the runtime, this can take a few seconds)")+'</p>';
+  const r=await judge(p,ta.value,ls.value);
+  subs.unshift({n:Date.now(),user:me,pid:id,verdict:r.verdict,score:r.score,res:r.res,lang:ls.value});subs=subs.slice(0,200);S.set("subs",subs);
+  tstH=verdictHtml(r)+(r.msg?`<pre>${esc(r.msg)}</pre>`:"")+`<div class="tests">${r.res.map((x,i)=>`<span class="${x==="OK"?"p":"f"}" title="${x}">${i+1}</span>`).join("")}</div>`;
+  bt("t");$("#bd").textContent=Math.max(best(id),0)+" / 100";sb.disabled=false};
+ stm();bt("i");
 }
 function verdictHtml(r){const c=r.verdict==="Accepted"?"ok":r.verdict==="Wrong Answer"?"bad":"warn";
   return `<p><span class="${c}">${r.verdict}</span> — passed ${r.res.filter(x=>x==="OK").length} of ${r.res.length} tests (${r.score}%)</p>`}
