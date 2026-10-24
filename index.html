@@ -291,7 +291,7 @@ function runOne(code,input){
 async function judge(p,code,lang){
   const res=[];let verdict="Accepted",msg="";
   for(const inp of p.ins){
-    const r=await runAny(lang,code,inp);if(r.err&&!msg)msg=r.err;let v="OK";
+    const r=await runAny(lang,code,inp);if(r.err&&!msg)msg=/unsafe-eval|Content Security Policy/i.test(r.err)?"This page blocks running code (the claude.ai preview does this). Open the site from your GitHub Pages link or download index.html and open it in your browser.":r.err;let v="OK";
     if(r.tle)v="TLE";else if(r.err)v="RE";else if(r.out.trim().replace(/\s+\n/g,"\n")!==p.ref(inp))v="WA";
     res.push(v);
   }
